@@ -42,10 +42,12 @@ def create(request):
             title=request.POST["title"]
             description= request.POST["description"]
             bid=float(request.POST["bid"])
-            if len(request.FILES)!=0:
-                image=request.FILES["image"]
             cat=request.POST["category"]
             category = Category.objects.get(name=cat)
+            if len(request.FILES)!=0:
+                image=request.FILES["image"]
+            else :
+                return render(request, 'auctions/error.html',{'message':'Please select an Image in order to upload the current Listing.'})
             li = Listings(title=title,description=description,bid=bid,image=image,category=category, user=request.user)
             li.save()
             return HttpResponseRedirect(reverse("index"))
@@ -78,8 +80,8 @@ def cdlisting(request, list_id):
             winner=listing.amount.filter(item=list_id).last().user
             if price==user.money.filter(user=request.user).last().bid:
                 messages.success(request,"Congratulations! You won the Bid")
-                return render(request, "auctions/cdlisting.html", {'listing':listing, 'price':price, 'winner':winner})
-        return render(request, "auctions/cdlisting.html", {'listing':listing, 'winner':winner, 'price':price})
+            return render(request, "auctions/cdlisting.html", {'listing':listing, 'price':price, 'winner':winner})
+        return render(request, 'auctions/error.html',{'message':'Sorry, the data has been deleted'})
     else:
         return render(request, 'auctions/error.html',{'message':'Please Login to view the winner'})
         
