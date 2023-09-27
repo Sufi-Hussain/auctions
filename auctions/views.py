@@ -81,7 +81,7 @@ def cdlisting(request, list_id):
             if price==user.money.filter(user=request.user).last().bid:
                 messages.success(request,"Congratulations! You won the Bid")
             return render(request, "auctions/cdlisting.html", {'listing':listing, 'price':price, 'winner':winner})
-        return render(request, 'auctions/error.html',{'message':'Sorry, the data has been deleted'})
+        return render(request, 'auctions/error.html',{'message':"Sorry, you were not part of the bid as you've registered late"})
     else:
         return render(request, 'auctions/error.html',{'message':'Please Login to view the winner'})
         
